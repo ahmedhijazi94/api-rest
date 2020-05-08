@@ -1,5 +1,10 @@
 const User = require('../models/').User;
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+
+const authConfig = require('./auth.json');
+
 
 module.exports = {
     async authenticate(req, res){
@@ -14,6 +19,12 @@ module.exports = {
             return res.status(400).send('error: Invalid password');
         }
 
-        res.send('ok')
+        user.password = undefined;
+
+        const token = jwt.sign({id: user.id}, authConfig.secret, {
+            expiresIn: 86508
+        });
+
+        res.send({user, token})
     }
 }
