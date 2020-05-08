@@ -1,8 +1,12 @@
 const express = require('express');
 const routes = express.Router();
 
-routes.get('/', (req, res) => {
-    res.send('ok')
-})
+const Controllers = require('../controllers/controllers');
+
+routes.post('/users/register' , Controllers.userController.controller.register);
+
+
+
+
 
 module.exports = routes;
