@@ -17,7 +17,10 @@ module.exports = {
            const hash = await bcrypt.hash(password, 10);
            req.body.password = hash;
            //criar user
-           await User.create(req.body).then(user => res.send(user));
+           const user = await User.create(req.body)
+           user.password = undefined;
+           return res.send(user);
+
            return;
            
        } catch (error) {
