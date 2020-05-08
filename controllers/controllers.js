@@ -4,6 +4,10 @@ const Controllers = {
     userController : {
         needAdmin: true,
         controller: require('./users/userController')
+    },
+    authController:{
+        needAdmin: false,
+        controller: require('../auth/authController')
     }
 }
 
