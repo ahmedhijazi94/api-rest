@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
-
+//require todos os controllers
 const Controllers = require('../controllers/controllers');
-
-
 
 //LOGIN AUTHENTICATION
 router.post('/auth', Controllers.authController.controller.authenticate);
