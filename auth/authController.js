@@ -15,6 +15,10 @@ module.exports = {
             return res.status(400).send('error: User not found');
         }
 
+        if(user.status != 'active'){
+            return res.status(400).send('error: Inactive user')
+        }
+
         if(! await bcrypt.compare(password, user.password)){
             return res.status(400).send('error: Invalid password');
         }
