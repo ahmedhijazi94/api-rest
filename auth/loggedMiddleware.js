@@ -27,6 +27,8 @@ module.exports = (req, res, next) =>{
         // se for válido, retorna o userId e liberar o usuario a acessar o resto da api.
         req.userId = decoded.id;
         req.isAdmin = decoded.isAdmin;
+        req.loggedLogin = decoded.login;
+        req.loggedEmail = decoded.email;
         return next();
 
     });   

@@ -21,7 +21,8 @@ const adminMiddleware = require('../auth/adminMiddleware');
 
 //USERS
 router.post('/users/register', adminMiddleware(Controllers.userController.needAdmin), Controllers.userController.controller.register);
-//====================================================================================//
+router.put('/users/:id', Controllers.userController.controller.update);
+//====================================================================================================================================//
 
 
 

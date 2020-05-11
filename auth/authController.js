@@ -33,7 +33,7 @@ module.exports = {
         }
         user.password = undefined;
 
-        const token = jwt.sign({id: user.id, isAdmin: isAdmin}, authConfig.secret, {
+        const token = jwt.sign({id: user.id, login: user.login, email: user.email, isAdmin: isAdmin}, authConfig.secret, {
             expiresIn: 86508
         });
 
