@@ -18,10 +18,21 @@ router.use(loggedMiddleware);
 const adminMiddleware = require('../auth/adminMiddleware');
 //====================================================================//
 
-//USERS
+//USERS CRUD
+//========>>>
+//CREATE
 router.post('/users/register', adminMiddleware(Controllers.userController.needAdmin), Controllers.userController.controller.register);
-router.put('/users/:id', Controllers.userController.controller.update);
+//READ
+router.get('/users', adminMiddleware(Controllers.userController.needAdmin), Controllers.userController.controller.readAll);
+//UPDATE
+router.put('/users/user/:id', Controllers.userController.controller.update);
+//DELETE
+router.delete('/users/user/:id', adminMiddleware(Controllers.userController.needAdmin), Controllers.userController.controller.delete);
 //====================================================================================================================================//
 
+
+router.get('*', (req, res) =>{
+    res.send('404')
+})
 
 module.exports = router;

@@ -39,6 +39,41 @@ module.exports = {
            res.status(400).send('error: User registration failed.')
        }
     },
+    async readAll(req, res){
+        //pegando as params query do url
+        let {page = 1, perPage = 10} = req.query;
+        //configurando page inserida na url
+        if(page > 0){
+            page = page - 1;
+        }
+        //convertando pra integer
+        page = parseInt(page);
+        perPage = parseInt(perPage);
+        //função pra formatar users
+        responseUsers = (users, page, perPage) =>{
+            //pagination info===============================//
+            const num_pages = Math.ceil(users.count/perPage);
+            let current_page;
+            if (page > 0){
+                current_page = current_page - 1;
+            }else{
+                current_page = 1;
+            }
+            usersInfo = {
+                pagination:{
+                    current_page : current_page,
+                    num_pages: num_pages,
+                    per_page: perPage
+                } 
+            }
+            //=========================================//
+            //adiciona pagination info a resposta
+            Object.assign(users, usersInfo);
+            res.send(users);
+        }
+        //pegar os users
+         User.findAndCountAll({offset: page*perPage, limit: perPage, subQuery:false, include: [Role], order: [['name', 'ASC']]}).then(user => responseUsers(user, page, perPage));
+    },
     async update(req, res){
         //pega os dados do usuario logado
         const loggedIsAdmin   = req.isAdmin;
@@ -164,5 +199,17 @@ module.exports = {
         } catch (error) {
             return res.send('erro: User updated failed.');
         }
+    },
+    async delete(req, res){
+        //pegar o id do user a ser deletado
+        const userToDeleteId = req.params.id;
+        //pesquisar user com esse id
+        const user = await User.findOne({where: {id: userToDeleteId}});
+        //se existir, apagar user e o role dele
+        if(user){
+            return User.destroy({where: {id: userToDeleteId}}).then(Role.destroy({where: {userid: userToDeleteId}}).then(res.send('User ['+user.login+'] has been deleted.')))
+        }
+        //se não, retornar erro
+        return res.status(400).send('error: User not found');
     }
 }
