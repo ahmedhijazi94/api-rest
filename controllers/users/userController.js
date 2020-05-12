@@ -74,6 +74,32 @@ module.exports = {
         //pegar os users
          User.findAndCountAll({offset: page*perPage, limit: perPage, subQuery:false, include: [Role], order: [['name', 'ASC']]}).then(user => responseUsers(user, page, perPage));
     },
+    async readOne(req, res){
+        //pega os dados do usuario logado
+        const loggedIsAdmin   = req.isAdmin;
+        const loggedId        = req.userId;
+        //=======================================//
+        //pega o id do user que vai ser pesquisado
+        const userToGet  = req.params.id;
+        //======================================//
+        //função pra responder o usuario (NÃO ADMIN)
+        getUser = (user) =>{
+            user.status = undefined;
+            user.role = undefined;
+            res.send(user);
+        }
+        //se não for admin
+        if(!await loggedIsAdmin){
+            //proibir se tentar pegar outro usuario
+            if(loggedId != userToGet){
+                return res.status(400).send('error: No permission to get other user.');
+            }
+            //se for o usuario logado, repondder com a função getUser que trata o usuario para o não admin
+            return User.findOne({where: {id: userToGet}}).then(user =>  getUser(user))
+        }
+        //se for admin, mostrar usuario
+        return User.findOne({where: {id: userToGet}, include: [Role]}).then(user =>  res.send(user));
+    },
     async update(req, res){
         //pega os dados do usuario logado
         const loggedIsAdmin   = req.isAdmin;

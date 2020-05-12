@@ -24,6 +24,7 @@ const adminMiddleware = require('../auth/adminMiddleware');
 router.post('/users/register', adminMiddleware(Controllers.userController.needAdmin), Controllers.userController.controller.register);
 //READ
 router.get('/users', adminMiddleware(Controllers.userController.needAdmin), Controllers.userController.controller.readAll);
+router.get('/users/user/:id', Controllers.userController.controller.readOne);
 //UPDATE
 router.put('/users/user/:id', Controllers.userController.controller.update);
 //DELETE
