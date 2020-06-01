@@ -5,8 +5,11 @@ const bcrypt = require('bcrypt');
 
 module.exports = {
     async register(req, res){
-       const {login, email, password, role} = req.body;
+       const {name, login, email, password, role, status} = req.body;
        try {
+           if(await !name || !login || !email || !password || !role || !status){
+               return res.status(400).send('Informe os dados do Usuário');
+           }
            //checa se login existe.
            if(await User.findOne({where: {login : login}})){
                return res.status(400).send('error: User already exists.');
